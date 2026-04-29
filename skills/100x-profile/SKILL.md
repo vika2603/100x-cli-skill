@@ -6,7 +6,9 @@ description: "Set up and inspect 100x CLI credential profiles, choose the defaul
 # 100x Profile
 
 Use this skill when the user needs to configure or inspect local `100x` CLI access.
-Do not assume profile names. Only use a named profile when the user explicitly names it.
+For write commands (in `100x-trade`), do not assume a profile — require the user
+to name one. For read commands (in `100x-account`), it is fine to fall back to
+the CLI's current default profile and tell the user which one resolved.
 
 ## Flow
 

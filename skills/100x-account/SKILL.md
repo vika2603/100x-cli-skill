@@ -11,16 +11,17 @@ a configured profile, but they do not place or modify orders.
 
 ## Flow
 
-1. Determine the profile. If the user named one, use `--profile <profile>`; otherwise
-   use the current default profile and say so.
+1. Determine the profile. If the user named one, run commands with
+   `--profile <profile>` and tell the user which profile is in use. If the user
+   did not name one, run commands without `--profile` (the CLI uses its current
+   default) and tell the user which profile that resolved to. The examples below
+   show the explicit `--profile <profile>` form for clarity.
 2. Classify the request as overview, exposure/risk, pending activity, or history.
 3. Run only the reads needed for that path.
 4. Summarize in account terms: available balance, margin in use, unrealized PnL,
    open positions, pending orders, active triggers, and recent finished activity.
 5. If the user asks to place, edit, cancel, close, change margin, or change risk,
    switch to `100x-trade`.
-
-If using the CLI default profile, omit `--profile <profile>` from the examples.
 
 ## Account Overview
 
