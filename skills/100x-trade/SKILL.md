@@ -5,15 +5,22 @@ description: "Execute 100x CLI workflows that change account state: placing, edi
 
 # 100x Trade
 
-Use this skill for any `100x` CLI workflow that can change account state. Require an
-explicit profile and a confirmation that names the concrete action, symbol or market,
-and the fields that apply to that action.
+Use this skill for any `100x` CLI workflow that can change account state.
+Confirm an explicit profile and the concrete action — symbol or market and the
+fields that apply to that action — before running a write.
 
-## Safety Gate
+This skill is process guidance for the agent, not a technical guard. It lowers
+the chance of an unintended write but does not prevent one. Real enforcement
+(deny-by-default permissions, PreToolUse hooks, command wrappers, size caps,
+daily caps) belongs in the harness or in a wrapper around the `100x` CLI.
 
-Before running a write command, confirm:
+## Pre-Write Checklist
 
-- Profile, never inferred for writes.
+Confirm before running a write:
+
+- Profile. Do not infer for writes. If the user has not named one, run
+  `100x profile list` and show the configured profiles (note the current
+  default) so they can pick.
 - Symbol or market.
 - Direction or side when trading.
 - Size and unit when the command accepts size.
@@ -21,8 +28,23 @@ Before running a write command, confirm:
 - Full-close behavior when using market position close.
 - Risk impact for leverage, margin mode, margin, stop loss, or take profit.
 
-Read-only commands may be used to prepare a plan. Network failures on writes are
-ambiguous; verify account state before retrying.
+Read-only commands may be used freely to prepare a plan.
+
+## Network Failures and Retries
+
+Network failures on writes are ambiguous: the request may have landed even if
+the CLI returned an error. Before retrying, verify with the matching read
+(`futures order list`, `futures order deals`, `futures position list`,
+`futures trigger list <symbol>`). If a retry is genuinely needed for
+`futures order place` or `futures position close`, pass `--client-order-id <id>`
+so the retry is idempotent on the exchange side.
+
+## `--yes`
+
+`--yes` is the non-interactive confirmation flag. Append it to a write command
+in the same turn the user explicitly confirmed that exact action. Templates
+in the references show commands without `--yes` so it is not carried into a
+different action or a later turn by accident.
 
 ## Size Handling
 
